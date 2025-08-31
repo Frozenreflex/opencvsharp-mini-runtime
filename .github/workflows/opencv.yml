@@ -22,7 +22,7 @@ env:
     -D BUILD_JAVA=OFF
     -D WITH_GSTREAMER=ON
     -D WITH_ADE=OFF
-    -D WITH_FFMPEG=ON
+    -D WITH_FFMPEG=OFF
     -D WITH_V4L=OFF
     -D WITH_1394=OFF
     -D WITH_GTK=OFF
@@ -144,7 +144,7 @@ jobs:
             cat <<'EOS'
             set -eux
             sudo apt update
-            sudo apt install -y ffmpeg libavcodec-dev libavformat-dev libswscale-dev libavutil-dev
+            sudo apt install -y ffmpeg libavcodec-dev libavformat-dev libswscale-dev libavutil-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good
         EOS
           )
         elif [[ "${{ matrix.os }}" == "osx" ]]; then
