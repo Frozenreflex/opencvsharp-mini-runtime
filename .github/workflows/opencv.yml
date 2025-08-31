@@ -123,8 +123,7 @@ jobs:
         fi
         docker exec builder /bin/sh -c "$script"
 
-    - name: Install Dependencies in Docker Container
-      if: matrix.image != ''
+    - name: Install Dependencies
       run: |
         if [[ "${{ matrix.os }}" == "centos.7" || "${{ matrix.os }}" =~ "rhel." ]]; then
           script=$(
@@ -164,7 +163,12 @@ jobs:
         EOS
         )
         fi
-        docker exec builder /bin/sh -c "$script"
+        
+        if [[ "${{ matrix.image }}" == "" ]]; then
+          bash -c "$script"
+        else
+          docker exec builder /bin/sh -c "$script"
+        fi
 
     - name: Configure OpenCV
       run: |
