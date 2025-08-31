@@ -20,7 +20,7 @@ env:
     -D BUILD_PERF_TESTS=OFF
     -D BUILD_TESTS=OFF
     -D BUILD_JAVA=OFF
-    -D WITH_GSTREAMER=OFF
+    -D WITH_GSTREAMER=ON
     -D WITH_ADE=OFF
     -D WITH_FFMPEG=ON
     -D WITH_V4L=OFF
@@ -130,16 +130,39 @@ jobs:
           script=$(
             cat <<'EOS'
             set -eux
-            yum install -y gcc cmake3 gcc-c++ make nasm
+            yum install -y gcc cmake3 gcc-c++ make nasm ffmpeg
         EOS
           )
         elif [[ "${{ matrix.os }}" =~ ^alpine ]]; then
           script=$(
             cat <<'EOS'
             set -eux
-            apk add --no-cache build-base cmake nasm linux-headers
+            apk add --no-cache build-base cmake nasm linux-headers ffmpeg
         EOS
           )
+        elif [[ "${{ matrix.os }}" =~ ^ubuntu || "${{ matrix.os }}" == "android" ]]; then
+          script=$(
+            cat <<'EOS'
+            set -eux
+            apt-get update
+            apt-get install -y ffmpeg
+        EOS
+          )
+        elif [[ "${{ matrix.os }}" == "osx" ]]; then
+          script=$(
+            cat <<'EOS'
+            set -eux
+            brew update
+            brew install ffmpeg
+        EOS
+          )
+        elif [[ "${{ matrix.os }}" == "win" ]]; then
+          script=$(
+            cat <<'EOS'
+            set -eux
+            choco install -y ffmpeg
+        EOS
+        )
         fi
         docker exec builder /bin/sh -c "$script"
 
