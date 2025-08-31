@@ -116,8 +116,7 @@ jobs:
         echo "Executing script in Docker container: $script"
         docker exec builder /bin/sh -c "$script"
 
-    - name: Install Dependencies in Docker Container
-      if: matrix.image != ''
+    - name: Install Dependencies
       run: |
         if [[ "${{ matrix.os }}" == "centos.7" || "${{ matrix.os }}" =~ "rhel." ]]; then
           script=$(
@@ -130,12 +129,40 @@ jobs:
           script=$(
             cat <<'EOS'
             set -eux
-            apk add --no-cache build-base cmake
+            apk add --no-cache build-base cmake ffmpeg
         EOS
           )
+        elif [[ "${{ matrix.os }}" =~ ^ubuntu || "${{ matrix.os }}" == "android" ]]; then
+          script=$(
+            cat <<'EOS'
+            set -eux
+            sudo apt update
+            sudo apt install -y ffmpeg libavcodec-dev libavformat-dev libswscale-dev libavutil-dev
+        EOS
+          )
+        elif [[ "${{ matrix.os }}" == "osx" ]]; then
+          script=$(
+            cat <<'EOS'
+            set -eux
+            brew update
+            brew install ffmpeg
+        EOS
+          )
+        elif [[ "${{ matrix.os }}" == "win" ]]; then
+          script=$(
+            cat <<'EOS'
+            set -eux
+            choco install -y ffmpeg
+        EOS
+        )
         fi
-        echo "Executing script in Docker container: $script"
-        docker exec builder /bin/sh -c "$script"
+        
+        if [[ "${{ matrix.image }}" == "" ]]; then
+          bash -c "$script"
+        else
+          docker exec builder /bin/sh -c "$script"
+        fi
+
 
     - name: Configure OpenCvSharp
       run: |
