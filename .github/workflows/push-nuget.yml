@@ -26,8 +26,8 @@ jobs:
         # - { os: linux,        arch: arm64, }
         # - { os: linux-musl,   arch: x64,   }
         # - { os: linux-musl,   arch: arm64, }
-        - { os: android,      arch: arm64, }
-        - { os: android,      arch: x64,   }
+        # - { os: android,      arch: arm64, }
+        # - { os: android,      arch: x64,   }
   
     steps:
     - name: Download Artifacts
