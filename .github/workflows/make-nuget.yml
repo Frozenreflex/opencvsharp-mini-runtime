@@ -28,14 +28,14 @@ jobs:
         - { os: win,          arch: x64,   upstream: win-x64 }
         - { os: win,          arch: x86,   upstream: win-x86 }
         - { os: win,          arch: arm64, upstream: win-arm64 }
-        - { os: osx,          arch: x64,   upstream: osx-x64 }
-        - { os: osx,          arch: arm64, upstream: osx-arm64 }
-        - { os: centos.7,     arch: x64,   upstream: centos.7-x64 }
-        - { os: centos.7,     arch: arm64, upstream: centos.7-arm64 }
-        - { os: linux,        arch: x64,   upstream: rhel.8-x64 }
-        - { os: linux,        arch: arm64, upstream: rhel.8-arm64 }
-        - { os: linux-musl,   arch: x64,   upstream: alpine.3.22-x64 }
-        - { os: linux-musl,   arch: arm64, upstream: alpine.3.22-arm64 }
+        # - { os: osx,          arch: x64,   upstream: osx-x64 }
+        # - { os: osx,          arch: arm64, upstream: osx-arm64 }
+        # - { os: centos.7,     arch: x64,   upstream: centos.7-x64 }
+        # - { os: centos.7,     arch: arm64, upstream: centos.7-arm64 }
+        # - { os: linux,        arch: x64,   upstream: rhel.8-x64 }
+        # - { os: linux,        arch: arm64, upstream: rhel.8-arm64 }
+        # - { os: linux-musl,   arch: x64,   upstream: alpine.3.22-x64 }
+        # - { os: linux-musl,   arch: arm64, upstream: alpine.3.22-arm64 }
         - { os: android,      arch: arm64, upstream: android-arm64 }
         - { os: android,      arch: x64,   upstream: android-x64 }
 
@@ -66,10 +66,10 @@ jobs:
       run: |
         set -euo pipefail
 
-        PKG_ID="Sdcb.OpenCvSharp4.mini.runtime.${{ matrix.os }}-${{ matrix.arch }}"
-        AUTHOR="sdcb"
+        PKG_ID="${{ github.repository_owner }}.OpenCvSharp4.mini.runtime.${{ matrix.os }}-${{ matrix.arch }}"
+        AUTHOR="sdcb; ${{ github.repository_owner }}"
         LICENSE="Apache-2.0"
-        GIT_URL="https://github.com/sdcb/opencvsharp-mini-runtime"
+        GIT_URL="https://github.com/${{ github.repository }}"
         TAGS="Sdcb OpenCV OpenCvSharp OpenCvSharp4"
         YEAR=$(date +%Y)
 
@@ -183,10 +183,10 @@ jobs:
           - { os: win,          arch: arm64, runs-on: windows-11-arm,   upstream: win-arm64 }
           - { os: osx,          arch: x64,   runs-on: macos-13,         upstream: osx-x64 }
           - { os: osx,          arch: arm64, runs-on: macos-14,         upstream: osx-arm64 }
-          - { os: centos.7,     arch: x64,   runs-on: ubuntu-22.04,     upstream: centos.7-x64 }
-          - { os: centos.7,     arch: arm64, runs-on: ubuntu-22.04-arm, upstream: centos.7-arm64 }
-          - { os: linux,        arch: x64,   runs-on: ubuntu-22.04,     upstream: rhel.8-x64 }
-          - { os: linux,        arch: arm64, runs-on: ubuntu-22.04-arm, upstream: rhel.8-arm64 }
+          # - { os: centos.7,     arch: x64,   runs-on: ubuntu-22.04,     upstream: centos.7-x64 }
+          # - { os: centos.7,     arch: arm64, runs-on: ubuntu-22.04-arm, upstream: centos.7-arm64 }
+          # - { os: linux,        arch: x64,   runs-on: ubuntu-22.04,     upstream: rhel.8-x64 }
+          # - { os: linux,        arch: arm64, runs-on: ubuntu-22.04-arm, upstream: rhel.8-arm64 }
           # - { os: linux-musl,   arch: x64,   runs-on: ubuntu-22.04,     upstream: alpine.3.22-x64 }
           # - { os: linux-musl,   arch: arm64, runs-on: ubuntu-22.04-arm, upstream: alpine.3.22-arm64 }
           # - { os: android,      arch: arm64, runs-on: ubuntu-22.04,     upstream: android-arm64 }
@@ -221,7 +221,7 @@ jobs:
 
           dotnet add package OpenCvSharp4
           dotnet nuget add source ../nupkg --name local
-          dotnet add package Sdcb.OpenCvSharp4.mini.runtime.${{ matrix.os }}-${{ matrix.arch }} --source ../nupkg
+          dotnet add package ${{ github.repository_owner }}.OpenCvSharp4.mini.runtime.${{ matrix.os }}-${{ matrix.arch }} --source ../nupkg
 
       - name: Write test code
         run: |
@@ -281,7 +281,7 @@ jobs:
 
           dotnet add package OpenCvSharp4
           dotnet nuget add source ../nupkg --name local
-          dotnet add package Sdcb.OpenCvSharp4.mini.runtime.${{ matrix.os }}-${{ matrix.arch }} --source ../nupkg
+          dotnet add package ${{ github.repository_owner }}.OpenCvSharp4.mini.runtime.${{ matrix.os }}-${{ matrix.arch }} --source ../nupkg
           
           # 写测试代码
           New-Item -Name "Program.cs" -ItemType "file" -Value @"
