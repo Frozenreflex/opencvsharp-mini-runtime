@@ -189,8 +189,8 @@ jobs:
           # - { os: linux,        arch: arm64, runs-on: ubuntu-22.04-arm, upstream: rhel.8-arm64 }
           # - { os: linux-musl,   arch: x64,   runs-on: ubuntu-22.04,     upstream: alpine.3.22-x64 }
           # - { os: linux-musl,   arch: arm64, runs-on: ubuntu-22.04-arm, upstream: alpine.3.22-arm64 }
-          # - { os: android,      arch: arm64, runs-on: ubuntu-22.04,     upstream: android-arm64 }
-          # - { os: android,      arch: x64,   runs-on: ubuntu-22.04,     upstream: android-x64 }
+          - { os: android,      arch: arm64, runs-on: ubuntu-22.04,     upstream: android-arm64 }
+          - { os: android,      arch: x64,   runs-on: ubuntu-22.04,     upstream: android-x64 }
           
     runs-on: ${{ matrix.runs-on }}
     defaults:
@@ -206,6 +206,32 @@ jobs:
 
       - name: Create test project
         run: |
+          
+          if [[ "${{ matrix.os }}" =~ ^ubuntu || "${{ matrix.os }}" == "android" ]]; then
+            script=$(
+              cat <<'EOS'
+              set -eux
+              sudo apt update
+              sudo apt install -y ffmpeg libavcodec-dev libavformat-dev libswscale-dev libavutil-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good libunwind-dev
+          EOS
+            )
+          elif [[ "${{ matrix.os }}" == "osx" ]]; then
+            script=$(
+              cat <<'EOS'
+              set -eux
+              brew update
+          EOS
+            )
+          elif [[ "${{ matrix.os }}" == "win" ]]; then
+            script=$(
+              cat <<'EOS'
+              set -eux
+          EOS
+            )
+          fi
+          
+          bash -c "$script"
+          
           mkdir TestApp && cd TestApp
           
           cat > TestApp.csproj <<'EOF'
