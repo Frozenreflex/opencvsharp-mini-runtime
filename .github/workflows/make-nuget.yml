@@ -133,8 +133,8 @@ jobs:
             <title>${PKG_ID} native bindings</title>
             <authors>${AUTHOR}</authors>
             <requireLicenseAcceptance>true</requireLicenseAcceptance>
-            <description>Native binding for ${AUTHOR}.OpenCvSharp4.mini to work on ${RUNTIME_RID}.</description>
-            <summary>Native binding for ${AUTHOR}.OpenCvSharp4.mini to work on ${RUNTIME_RID}.</summary>
+            <description>Native binding for OpenCvSharp4 to work on ${RUNTIME_RID}.</description>
+            <summary>Native binding for OpenCvSharp4 to work on ${RUNTIME_RID}.</summary>
             <copyright>Copyright ${YEAR}</copyright>
             <license type="expression">${LICENSE}</license>
             <projectUrl>${GIT_URL}</projectUrl>
