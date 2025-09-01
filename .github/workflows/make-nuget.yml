@@ -36,8 +36,8 @@ jobs:
         # - { os: linux,        arch: arm64, upstream: rhel.8-arm64 }
         # - { os: linux-musl,   arch: x64,   upstream: alpine.3.22-x64 }
         # - { os: linux-musl,   arch: arm64, upstream: alpine.3.22-arm64 }
-        - { os: android,      arch: arm64, upstream: android-arm64 }
-        - { os: android,      arch: x64,   upstream: android-x64 }
+        # - { os: android,      arch: arm64, upstream: android-arm64 }
+        # - { os: android,      arch: x64,   upstream: android-x64 }
 
     steps:
     - name: Download OpenCvSharp Artifacts
