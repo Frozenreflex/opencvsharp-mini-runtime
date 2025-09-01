@@ -71,7 +71,7 @@ jobs:
             cat <<'EOS'
             set -eux
             sudo apt update
-            sudo apt install -y ffmpeg libavcodec-dev libavformat-dev libswscale-dev libavutil-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good libunwind-dev
+            sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good libunwind-dev
         EOS
           )
         elif [[ "${{ matrix.os }}" == "osx" ]]; then
@@ -79,14 +79,12 @@ jobs:
             cat <<'EOS'
             set -eux
             brew update
-            brew install ffmpeg
         EOS
           )
         elif [[ "${{ matrix.os }}" == "win" ]]; then
           script=$(
             cat <<'EOS'
             set -eux
-            choco install -y ffmpeg
         EOS
         )
         fi
