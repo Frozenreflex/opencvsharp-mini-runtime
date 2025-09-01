@@ -54,21 +54,8 @@ jobs:
         - { os: win,          arch: arm64, runs-on: windows-11-arm }
         # - { os: osx,          arch: x64,   runs-on: macos-13 }
         # - { os: osx,          arch: arm64, runs-on: macos-14 }
-        # - { os: centos.7,     arch: x64,   runs-on: ubuntu-22.04,     image: oraclelinux:7 }
-        # - { os: centos.7,     arch: arm64, runs-on: ubuntu-22.04-arm, image: oraclelinux:7 }
-        # - { os: rhel.8,       arch: x64,   runs-on: ubuntu-22.04,     image: oraclelinux:8 }
-        # - { os: rhel.8,       arch: arm64, runs-on: ubuntu-22.04-arm, image: oraclelinux:8 }
-        # - { os: alpine.3.22,  arch: x64,   runs-on: ubuntu-22.04,     image: alpine:3.22 }
-        # - { os: alpine.3.22,  arch: arm64, runs-on: ubuntu-22.04-arm, image: alpine:3.22 }
         - { os: android,      arch: arm64, runs-on: ubuntu-22.04 }
         - { os: android,      arch: x64,   runs-on: ubuntu-22.04 }
-        # Uncomment the following lines to enable additional platforms:
-        # - { os: ubuntu.24.04, arch: x64,   runs-on: ubuntu-24.04 }
-        # - { os: ubuntu.24.04, arch: arm64, runs-on: ubuntu-24.04-arm }
-        # - { os: win11,        arch: x64,   runs-on: windows-2025 }
-        # - { os: osx.15,       arch: arm64, runs-on: macos-15 }
-        # - { os: rhel.9,       arch: x64,   runs-on: ubuntu-22.04,     image: oraclelinux:9 }
-        # - { os: rhel.9,       arch: arm64, runs-on: ubuntu-22.04-arm, image: oraclelinux:9 }
 
     steps:
     - name: Checkout OpenCV repo
@@ -87,66 +74,14 @@ jobs:
         path: opencv_contrib
         fetch-depth: 1
 
-    - name: Pull Docker Image
-      if: matrix.image != ''
-      run: |
-        docker pull ${{ matrix.image }}
-
-    - name: Start Docker Container
-      if: matrix.image != ''
-      run: |
-        docker run -d --name builder -v "$PWD":${{ github.workspace }} -w ${{ github.workspace }} ${{ matrix.image }} tail -f /dev/null
-
-    - name: Initialize Docker Container
-      if: matrix.image != ''
-      run: |
-        if [[ "${{ matrix.os }}" == "centos.7" ]]; then
-          script=$(
-            cat <<'EOS'
-            set -eux
-            yum install -y oracle-epel-release-el7
-            yum-config-manager --enable ol7_developer_epel
-        EOS
-          )
-        elif [[ "${{ matrix.os }}" == "rhel.8" ]]; then
-          script=$(
-            cat <<'EOS'
-            set -eux
-            dnf config-manager --set-enabled ol8_codeready_builder
-        EOS
-          )
-        elif [[ "${{ matrix.os }}" == "rhel.9" ]]; then
-          script=$(
-            cat <<'EOS'
-            set -eux
-            dnf config-manager --set-enabled ol9_codeready_builder
-        EOS
-          )
-        fi
-        docker exec builder /bin/sh -c "$script"
-
     - name: Install Dependencies
       run: |
-        if [[ "${{ matrix.os }}" == "centos.7" || "${{ matrix.os }}" =~ "rhel." ]]; then
-          script=$(
-            cat <<'EOS'
-            set -eux
-            yum install -y gcc cmake3 gcc-c++ make nasm
-        EOS
-          )
-        elif [[ "${{ matrix.os }}" =~ ^alpine ]]; then
-          script=$(
-            cat <<'EOS'
-            set -eux
-            apk add --no-cache build-base cmake nasm linux-headers ffmpeg
-        EOS
-          )
-        elif [[ "${{ matrix.os }}" =~ ^ubuntu || "${{ matrix.os }}" == "android" ]]; then
+        if [[ "${{ matrix.os }}" =~ ^ubuntu || "${{ matrix.os }}" == "android" ]]; then
           script=$(
             cat <<'EOS'
             set -eux
             sudo apt update
-            sudo apt install -y ffmpeg libavcodec-dev libavformat-dev libswscale-dev libavutil-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good libunwind-dev
+            sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good libunwind-dev
         EOS
           )
         elif [[ "${{ matrix.os }}" == "osx" ]]; then
@@ -154,23 +89,17 @@ jobs:
             cat <<'EOS'
             set -eux
             brew update
-            brew install ffmpeg
         EOS
           )
         elif [[ "${{ matrix.os }}" == "win" ]]; then
           script=$(
             cat <<'EOS'
             set -eux
-            choco install -y ffmpeg
         EOS
         )
         fi
         
-        if [[ "${{ matrix.image }}" == "" ]]; then
-          bash -c "$script"
-        else
-          docker exec builder /bin/sh -c "$script"
-        fi
+        bash -c "$script"
 
     - name: Configure OpenCV
       run: |
@@ -232,11 +161,7 @@ jobs:
         EOS
         )
 
-        if [[ "${{ matrix.image }}" == "" ]]; then
-          bash -c "$script"
-        else
-          docker exec builder /bin/sh -c "$script"
-        fi
+        bash -c "$script"
 
     - name: Install OpenCV
       run: |
@@ -251,11 +176,7 @@ jobs:
         EOS
         )
 
-        if [[ "${{ matrix.image }}" == "" ]]; then
-          bash -c "$script"
-        else
-          docker exec builder /bin/sh -c "$script"
-        fi
+        bash -c "$script"
 
     - name: Show Build Artifacts
       run: |

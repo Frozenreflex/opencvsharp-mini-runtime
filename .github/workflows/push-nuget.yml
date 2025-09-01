@@ -20,12 +20,6 @@ jobs:
         - { os: win,          arch: arm64, }
         # - { os: osx,          arch: x64,   }
         # - { os: osx,          arch: arm64, }
-        # - { os: centos.7,     arch: x64,   }
-        # - { os: centos.7,     arch: arm64, }
-        # - { os: linux,        arch: x64,   }
-        # - { os: linux,        arch: arm64, }
-        # - { os: linux-musl,   arch: x64,   }
-        # - { os: linux-musl,   arch: arm64, }
         # - { os: android,      arch: arm64, }
         # - { os: android,      arch: x64,   }
   
